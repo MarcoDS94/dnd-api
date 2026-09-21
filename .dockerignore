@@ -1,0 +1,17 @@
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/.idea
+**/bin
+**/obj
+**/.dotnet-home
+PROJECT_LOG.md
+*.md
+.env*
+*.secrets.json
+appsettings.Development.json
+dev.sh
+Dockerfile*
+docker-compose*
+

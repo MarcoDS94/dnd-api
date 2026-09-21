@@ -489,6 +489,7 @@ $RECYCLE.BIN/
 # Environment and sensitive secrets
 .env
 .env.*
+!.env.example
 *.secrets.json
 
 # Environment settings containing connection strings & passwords

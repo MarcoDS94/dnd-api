@@ -1,0 +1,14 @@
+services:
+  dnd-api:
+    image: dnd-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dnd-api
+    ports:
+      - "${PORT:-5207}:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=${DATABASE_URL}
+    restart: unless-stopped
+
