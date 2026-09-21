@@ -13,4 +13,9 @@ if [ "$1" = "run" ]; then
     exec dotnet run --project "$SCRIPT_DIR/src/Dnd.Api" "$@"
 fi
 
+if [ "$1" = "ef" ]; then
+    shift
+    exec dotnet tool run dotnet-ef "$@"
+fi
+
 exec dotnet "$@"
