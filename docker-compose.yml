@@ -9,5 +9,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=${DATABASE_URL}
+      - Jwt__Key=${JWT_KEY:-DEVELOPMENT_SECRET_KEY_FOR_JWT_AUTHENTICATION_MIN_32_CHARS!}
     restart: unless-stopped
+
 
