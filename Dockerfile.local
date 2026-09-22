@@ -1,0 +1,34 @@
+# ==============================================================================
+# Local Development Dockerfile with Live Hot Reload (dotnet watch)
+# ==============================================================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dev
+WORKDIR /src
+
+# Copy solution, props, and project manifests first for optimal layer caching
+COPY ["DndBackend.sln", "./"]
+COPY ["Directory.Build.props", "./"]
+COPY ["src/Dnd.Domain/Dnd.Domain.csproj", "src/Dnd.Domain/"]
+COPY ["src/Dnd.Application/Dnd.Application.csproj", "src/Dnd.Application/"]
+COPY ["src/Dnd.Infrastructure/Dnd.Infrastructure.csproj", "src/Dnd.Infrastructure/"]
+COPY ["src/Dnd.Api/Dnd.Api.csproj", "src/Dnd.Api/"]
+
+# Restore dependencies
+RUN dotnet restore "src/Dnd.Api/Dnd.Api.csproj"
+
+# Copy source tree
+COPY src/ src/
+
+# Work in the API project directory
+WORKDIR "/src/src/Dnd.Api"
+
+# Development environment settings
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_HTTP_PORTS=8080
+# Ensures file watch triggers reliably inside Linux Docker volume mounts
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+
+EXPOSE 8080
+
+# Launch with hot reload: automatically re-compiles when .cs files change on host
+ENTRYPOINT ["dotnet", "watch", "run", "--no-launch-profile"]
+

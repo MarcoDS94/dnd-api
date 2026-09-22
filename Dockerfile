@@ -4,6 +4,7 @@ WORKDIR /src
 
 # Copy solution and csproj files first for optimal Docker layer caching
 COPY ["DndBackend.sln", "./"]
+COPY ["Directory.Build.props", "./"]
 COPY ["src/Dnd.Domain/Dnd.Domain.csproj", "src/Dnd.Domain/"]
 COPY ["src/Dnd.Application/Dnd.Application.csproj", "src/Dnd.Application/"]
 COPY ["src/Dnd.Infrastructure/Dnd.Infrastructure.csproj", "src/Dnd.Infrastructure/"]

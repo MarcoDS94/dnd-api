@@ -17,6 +17,10 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Support dynamic PORT binding for Google Cloud Run and container environments (defaults to 8080)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // Configure Kestrel Security & Resource Limits
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
@@ -210,7 +214,11 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Exclude /health from HTTPS redirection so Cloud Run and container probes don't receive a 307 redirect
+app.UseWhen(context => !context.Request.Path.StartsWithSegments("/health"), appBuilder =>
+{
+    appBuilder.UseHttpsRedirection();
+});
 
 // 5. CORS policy
 app.UseCors("CorsPolicy");

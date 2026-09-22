@@ -1,15 +1,26 @@
 services:
   dnd-api:
-    image: dnd-api:latest
+    image: dnd-api:local
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     ports:
       - "${PORT:-5207}:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=${DATABASE_URL}
       - Jwt__Key=${JWT_KEY:-DEVELOPMENT_SECRET_KEY_FOR_JWT_AUTHENTICATION_MIN_32_CHARS!}
+      - EnableSwagger=true
+    volumes:
+      # Live-mount host source code into container for instant hot reload
+      - ./src:/src/src
+      # Isolate container build output from host to prevent file locking/collisions
+      - /src/src/Dnd.Domain/bin
+      - /src/src/Dnd.Domain/obj
+      - /src/src/Dnd.Application/bin
+      - /src/src/Dnd.Application/obj
+      - /src/src/Dnd.Infrastructure/bin
+      - /src/src/Dnd.Infrastructure/obj
+      - /src/src/Dnd.Api/bin
+      - /src/src/Dnd.Api/obj
     restart: unless-stopped
-
-
